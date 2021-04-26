@@ -1,1 +1,1 @@
-# KATAS
+# KATAS del BootCamp Cero VII Ed.
