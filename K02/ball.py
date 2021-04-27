@@ -14,28 +14,28 @@ pantalla = pg.display.set_mode((ANCHO, ALTO))
 game_over = False
 x = ANCHO//2 # para que no tenga decimales
 y = ALTO//2
-vx = -5
-vy = -5
+vx = -8
+vy = -8
+reloj = pg.time.Clock()
 
 while not game_over:
+    reloj.tick(60)  # por si queremos reducir la velocidad de la pelota
     # gestión de eventos
     for evento in pg.event.get():
         if evento.type == pg.QUIT:
             game_over = True
 
+    # gestión de la pantalla
     pantalla.fill(NEGRO)
     pg.draw.circle(pantalla, ROJO, (x, y), 10)
     x += vx
     y += vy
 
-    if y == 0:
-        vy = 5
-    elif y == ALTO:
-        vy = -5
-    if x == 0:
-        vx = 5
-    elif x == ANCHO:
-        vx = -5
+    if y <= 0 or y>= ALTO:
+        vy = -vy
+    
+    if x <= 0 or x>= ANCHO:
+        vx = -vx
 
     # refrescamos pantalla
     pg.display.flip()
