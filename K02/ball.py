@@ -26,18 +26,17 @@ pg.init()
 pantalla = pg.display.set_mode((ANCHO, ALTO))
 reloj = pg.time.Clock()
 
-# Bola 1
-x = ANCHO//2 # para que no tenga decimales
-y = ALTO//2
-vx = -8
-vy = -8
 
-# Bola 2
-x2 = randint(0, ANCHO)
-y2 = randint(0, ALTO)
-vx2 = randint(5, 15)
-vy2 = randint(5, 15)
+bolas = []  # será una lista de diccionarios
 
+for _ in range (10):
+    bola = { 'x': randint(0, ANCHO),
+             'y': randint(0, ALTO),
+             'vx': randint(5, 10),
+             'vy': randint(5, 10),
+             'color': (randint(0,255), randint(0,255), randint(0, 255))
+        }
+    bolas.append(bola)
 
 game_over = False
 while not game_over:
@@ -47,20 +46,18 @@ while not game_over:
         if evento.type == pg.QUIT:
             game_over = True
 
+    # modificación de estado
+    for bola in bolas:
+        bola['x'] += bola['vx']
+        bola['y'] += bola['vy']
+
+        bola['vy'] *= rebotaY(bola['y'])
+        bola['vx'] *= rebotaX(bola['x'])
+   
     # gestión de la pantalla
     pantalla.fill(NEGRO)
-    pg.draw.circle(pantalla, ROJO, (x, y), 10)
-    pg.draw.circle(pantalla, VERDE, (x2, y2), 10)
-
-    x += vx
-    y += vy
-    x2 += vx2
-    y2 += vy2
-
-    vy *= rebotaY(y)
-    vx *= rebotaX(x)
-    vy2 *= rebotaY(y2)
-    vx2 *= rebotaX(x2)
+    for bola in bolas:
+        pg.draw.circle(pantalla, bola['color'], (bola['x'], bola['y']), 10)
 
     # refrescamos pantalla
     pg.display.flip()
