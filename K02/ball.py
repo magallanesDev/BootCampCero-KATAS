@@ -1,19 +1,6 @@
 import pygame as pg
 import sys
-from random import randint
-
-def rebotaX(x):
-    if x <= 0 or x >= ANCHO:
-        return -1  # cambiamos el signo
-    else:
-        return 1
-
-def rebotaY(y):
-    if y <= 0 or y >= ALTO:
-        return -1
-    
-    return 1  # nos podemos ahorrar el ELSE
-
+from random import randint, choice
 
 ROJO = (255, 0, 0)
 AZUL = (0, 0, 255)
@@ -35,21 +22,30 @@ class Bola():
         self.vy = vy
         self.color = color
 
+    def rebotaX(self):
+        if self.x < 0 or self.x > ANCHO:
+            self.vx = -self.vx
 
-bolas = []  # será una lista de diccionarios
+    def rebotaY(self):
+        if self.y <= 0 or self.y >= ALTO:
+            self.vy = -self.vy
+    
 
-for _ in range (10):
+bolas = []  # creamos una lista vacia
+
+for _ in range(10):  # utiliza el guión bajo porque no lo va a volver a usar dentro del bucle
     bola = Bola(randint(0, ANCHO),
                 randint(0, ALTO),
-                randint(5, 10),
-                randint(5, 10),
-                (randint(0,255), randint(0,255), randint(0, 255)))
+                choice([randint(-10,-5), randint(5, 10)]),
+                choice([randint(-10,-5), randint(5, 10)]),
+                (randint(0,255), randint(0,255), randint(0,255)))
     
     bolas.append(bola)
 
+
 game_over = False
 while not game_over:
-    reloj.tick(60)  # por si queremos reducir la velocidad de la pelota
+    reloj.tick(50)  # por si queremos reducir la velocidad de la pelota
     # gestión de eventos
     for evento in pg.event.get():
         if evento.type == pg.QUIT:
@@ -60,9 +56,9 @@ while not game_over:
         bola.x += bola.vx
         bola.y += bola.vy
 
-        bola.vy *= rebotaY(bola.y)
-        bola.vx *= rebotaX(bola.x)
-   
+        bola.rebotaX()
+        bola.rebotaY()
+        
     # gestión de la pantalla
     pantalla.fill(NEGRO)
     for bola in bolas:
