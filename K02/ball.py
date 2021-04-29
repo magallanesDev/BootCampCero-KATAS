@@ -36,35 +36,43 @@ class Bola():
     def dibujar(self, lienzo):
         pg.draw.circle(lienzo, self.color, (self.x, self.y), self.radio)
         
+class Raqueta():
+    def __init__(self, x=0, y=0):
+        self.altura = 10
+        self.anchura = 100
+        self.color = (255, 255, 255)
+        self.x = (ANCHO - self.anchura) // 2
+        self.y = ALTO - self.altura
 
-bolas = []  # creamos una lista vacia
+    def dibujar(self, lienzo):
+        rect = pg.Rect(self.x, self.y, self.anchura, self.altura)
+        pg.draw.rect(lienzo, self.color, rect)
 
-for _ in range(10):  # utiliza el guión bajo porque no lo va a volver a usar dentro del bucle
-    bola = Bola(randint(0, ANCHO),
-                randint(0, ALTO),
-                choice([randint(-10,-5), randint(5, 10)]),
-                choice([randint(-10,-5), randint(5, 10)]),
-                (randint(0,255), randint(0,255), randint(0,255)))
+
+raqueta = Raqueta()
+
+bola = Bola(randint(0, ANCHO),
+            randint(0, ALTO),
+            choice([randint(-10,-5), randint(5, 10)]),
+            choice([randint(-10,-5), randint(5, 10)]),
+            (randint(0,255), randint(0,255), randint(0,255)))
     
-    bolas.append(bola)
-
 
 game_over = False
 while not game_over:
-    reloj.tick(50)  # por si queremos reducir la velocidad de la pelota
+    reloj.tick(50)
     # gestión de eventos
     for evento in pg.event.get():
         if evento.type == pg.QUIT:
             game_over = True
 
     # modificación de estado
-    for bola in bolas:
-        bola.actualizar()
+    bola.actualizar()
         
     # gestión de la pantalla
     pantalla.fill(NEGRO)
-    for bola in bolas:
-        bola.dibujar(pantalla)
+    bola.dibujar(pantalla)
+    raqueta.dibujar(pantalla)
         
     # refrescamos pantalla
     pg.display.flip()
