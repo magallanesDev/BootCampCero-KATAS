@@ -15,21 +15,27 @@ reloj = pg.time.Clock()
 
 
 class Bola():
-    def __init__(self, x, y, vx, vy, color):
+    def __init__(self, x, y, vx, vy, color, radio=10):
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
         self.color = color
+        self.radio = radio
 
-    def rebotaX(self):
+    def actualizar(self):
+        self.x += self.vx
+        self.y += self.vy
+        
         if self.x < 0 or self.x > ANCHO:
             self.vx = -self.vx
 
-    def rebotaY(self):
         if self.y <= 0 or self.y >= ALTO:
             self.vy = -self.vy
     
+    def dibujar(self, lienzo):
+        pg.draw.circle(lienzo, self.color, (self.x, self.y), self.radio)
+        
 
 bolas = []  # creamos una lista vacia
 
@@ -53,17 +59,13 @@ while not game_over:
 
     # modificación de estado
     for bola in bolas:
-        bola.x += bola.vx
-        bola.y += bola.vy
-
-        bola.rebotaX()
-        bola.rebotaY()
+        bola.actualizar()
         
     # gestión de la pantalla
     pantalla.fill(NEGRO)
     for bola in bolas:
-        pg.draw.circle(pantalla, bola.color, (bola.x, bola.y), 10)
-
+        bola.dibujar(pantalla)
+        
     # refrescamos pantalla
     pg.display.flip()
 
