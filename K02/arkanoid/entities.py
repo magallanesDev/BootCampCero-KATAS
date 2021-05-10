@@ -1,14 +1,7 @@
+from arkanoid import ANCHO, ALTO, FPS
 import pygame as pg
-import sys
 import random
-from enum import Enum  # importamos la clase Enum
-
-ANCHO = 800
-ALTO = 600
-FPS = 60
-
-levels = [['XXXXXXXX', 'X--DD--X', 'X--DD--X', 'XXXXXXXX'],
-          ['DDDDDDDD', 'X--DD--X', 'X--DD--X', 'DDDDDDDD']]
+from enum import Enum
 
 
 class Marcador(pg.sprite.Sprite):
@@ -45,10 +38,6 @@ class Marcador(pg.sprite.Sprite):
             self.rect = self.image.get_rect(midtop=(self.x,self.y))
 
 
-class CuentaVidas(Marcador):
-    plantilla = "Vidas: {}"
-
-
 class Ladrillo(pg.sprite.Sprite):
     disfraces = ["greenTile.png", "redTile.png", "redTileBreak.png"]
 
@@ -78,7 +67,7 @@ class Ladrillo(pg.sprite.Sprite):
         return (self.numGolpes > 0 and not self.esDuro) or (self.numGolpes > 1 and self.esDuro)
         # si es True es que desaparece
         
-          
+         
 class Raqueta(pg.sprite.Sprite):
     disfraces = ['electric00.png', 'electric01.png', 'electric02.png']
     def __init__(self, x, y):
@@ -184,79 +173,4 @@ class Bola(pg.sprite.Sprite):  # heredamos de la clase Sprite
             self.vx = random.randint(5, 10) * random.choice([-1, 1])
             self.vy = random.randint(5, 10) * random.choice([-1, 1])
             self.estado = Bola.Estado.viva
-        
-
-class Game():
-    def __init__(self):
-        self.pantalla = pg.display.set_mode((ANCHO, ALTO))
-        self.vidas = 30
-        self.puntuacion = 0
-        self.todoGrupo = pg.sprite.Group()  # creamos un grupo vacío
-        self.grupoJugador = pg.sprite.Group()
-        self.grupoLadrillos = pg.sprite.Group()
-        
-        self.level = 0
-        self.disponer_ladrillos(levels[self.level])
-
-        self.cuentaPuntos = Marcador(10,10)
-        self.cuentaVidas = CuentaVidas(790, 10, "D")
-        self.cuentaVidas.text = self.vidas
-        
-        self.fondo = pg.image.load("./images/background.png")
-
-        self.bola = Bola(ANCHO//2, ALTO//2)
-        self.todoGrupo.add(self.bola)
-
-        self.raqueta = Raqueta(x = ANCHO//2, y = ALTO - 40)
-        self.grupoJugador.add(self.raqueta)
-        
-        self.todoGrupo.add(self.grupoJugador, self.grupoLadrillos)
-        self.todoGrupo.add(self.cuentaPuntos, self.cuentaVidas)
-
-    def disponer_ladrillos(self, level):
-        for fila, cadena in enumerate(level): 
-            for columna, caracter in enumerate(cadena):
-                if caracter in 'XD':  # buscamos si el caracter es X o D (si el caracter está en la cadena 'XD')
-                    x = 5 + (100 * columna)
-                    y = 5 + (40 * fila)
-                    ladrillo = Ladrillo(x, y, caracter == 'D')
-                    self.grupoLadrillos.add(ladrillo)
-    
-    def bucle_principal(self):
-        game_over = False  # la variable game_over sólo se usará en este método por eso no le ponemos el self
-        reloj = pg.time.Clock()
-
-        while not game_over and self.vidas > 0:
-            dt = reloj.tick(FPS)
-           
-            for evento in pg.event.get():
-                if evento.type == pg.QUIT:
-                    game_over = True
-            
-            self.cuentaPuntos.text = self.puntuacion
-            self.cuentaVidas.text = self.vidas
-            self.bola.prueba_colision(self.grupoJugador)
-            tocados = self.bola.prueba_colision(self.grupoLadrillos)
-            for ladrillo in tocados:
-                self.puntuacion += 5
-                if ladrillo.desaparece():
-                    self.grupoLadrillos.remove(ladrillo)
-                    self.todoGrupo.remove(ladrillo)
-                    if len(self.grupoLadrillos) == 0:
-                        self.level += 1
-                        self.disponer_ladrillos(levels[self.level])
-                        self.todoGrupo.add(self.grupoLadrillos)
-
-            self.todoGrupo.update(dt)
-            if self.bola.estado == Bola.Estado.muerta:
-                self.vidas -= 1
-
-            self.pantalla.blit(self.fondo, (0,0))
-            self.todoGrupo.draw(self.pantalla)
-
-            pg.display.flip()
-
-if __name__ == '__main__':
-    pg.init()
-    game = Game()  # primero instanciamos
-    game.bucle_principal()  # después llamamos al método
+     
