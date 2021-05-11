@@ -2,7 +2,7 @@
 
 ## K01 - Inicio, ejercicio SMS
 ## K02 - PYGAME, juego ARKANOID
-## K03 - FLASK, aplicación WEB
+## K03 - FLASK, aplicación web KAKEBO
 
 
 ### Kick Off:         viernes 23 abril 2021
