@@ -1,0 +1,3 @@
+# Ignoramos la carpeta venv (entorno virtual)
+venv/
+
