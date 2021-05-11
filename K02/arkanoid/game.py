@@ -13,11 +13,12 @@ class Arkanoid():
     def start(self):
         while True:
             la_escena = self.escenas[self.escena_activa]
+            la_escena.reset()
             la_escena.bucle_principal()
 
             self.escena_activa += 1
             if self.escena_activa >= len(self.escenas):
-                self.escenas = 0
+                self.escena_activa = 0
             #  self.escena_activa = (self.escena_activa + 1) % len(self.escenas)
             #  esta línea es equivalente a las tres líneas anteriores
 
