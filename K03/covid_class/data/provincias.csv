@@ -1,36 +1,36 @@
-C,A Coruña (La Coruña)
-VI,Araba/Álava
+C,A Corunha (La Corunha)
+VI,Araba/Alava
 AB,Albacete
 A,Alicante/Alacant
-AL,Almería
+AL,Almeria
 O,Asturias
-AV,Ávila
+AV,Avila
 BA,Badajoz
 PM,Balears (Baleares)
 B,Barcelona (Barcelona)
 BI,Bizkaia(Vizcaya)
 BU,Burgos
-CC,Cáceres
-CA,Cádiz
+CC,Caceres
+CA,Cadiz
 S,Cantabria
-CS,Castellón/Castelló
+CS,Castellon/Castello
 CR,Ciudad Real
-CO,Córdoba
+CO,Cordoba
 CU,Cuenca
-SS,Gipuzkoa(Guipúzcoa)
+SS,Gipuzkoa(Guipuzcoa)
 GI,Girona (Gerona)
 GR,Granada
 GU,Guadalajara
 H,Huelva
 HU,Huesca
-J,Jaén
+J,Jaen
 LO,La Rioja
 GC,Las Palmas
-LE,León
-L,Lleida (Lérida)
+LE,Leon
+L,Lleida (Lerida)
 LU,Lugo (Lugo)
 M,Madrid
-MA,Málaga
+MA,Malaga
 MU,Murcia
 NA,Navarra/Nafarroa
 OR,Ourense (Orense)
@@ -44,7 +44,9 @@ SO,Soria
 T,Tarragona (Tarragona)
 TE,Teruel
 TO,Toledo
-V,Valencia/València
+V,Valencia/Valencia
 VA,Valladolid
 ZA,Zamora
 Z,Zaragoza
+CE,Ceuta
+ME,Melilla
