@@ -30,16 +30,17 @@ def laprovincia(codigoProvincia):
     return "La provincia no existe"
 
 
-#  @app.route('/casos/<int:year>' defaults={'mes:None', dia:None})
-#  @app.route('/casos/<int:year>/<int:mes>', defaults={'dia':None})
-
 @app.route('/casos/<int:year>/<int:mes>/<int:dia>')
 def casos(year, mes, dia):
-    pass
-
-'''
-Primer caso: Devolver el número total de casos covid en un día del año determinado para todas las provincias
-Segundo caso: Lo mismo pero detallado por tipo, PCR, AC, AG, ELISA, DESCONOCIDO -> JSON
-'''
+    fichero = open('data/casos_diagnostico_provincia.csv', 'r')
+    dictreader = csv.DictReader(fichero)
+    sumaCasos = 0
+    for registro in dictreader:
+        if registro['fecha'] == str(year) + '-' + str(mes).zfill(2) + '-' + str(dia).zfill(2):
+            sumaCasos += int(registro['num_casos'])
+    fichero.close()
+    return str(sumaCasos)
     
-
+    
+#  @app.route('/casos/<int:year>' defaults={'mes:None', dia:None})
+#  @app.route('/casos/<int:year>/<int:mes>', defaults={'dia':None})
