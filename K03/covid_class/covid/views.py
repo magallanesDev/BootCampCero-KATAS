@@ -98,6 +98,6 @@ def incidencia():
         if num_pcr < 0:
             raise ValueError('Debe ser no negativo')
     except ValueError:
-        return render_template("alta.html", datos=formulario, error = "PCR no puede ser negativa")
+        return render_template("alta.html", datos=formulario, error = "PCR no puede ser negativa", provincias=lista)
     return 'Ha hecho un post'
     
