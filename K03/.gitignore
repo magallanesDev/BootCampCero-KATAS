@@ -1,3 +1,8 @@
 # Ignoramos la carpeta venv (entorno virtual)
 venv/
 
+# Ignoramos el archivo de variables de entorno
+.env
+
+# Ignoramos las bases de datos
+*.db
