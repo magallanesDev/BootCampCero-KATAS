@@ -1,4 +1,5 @@
 from kakebo import app
+from flask import jsonify, render_template
 import sqlite3
 
 @app.route('/')
@@ -9,18 +10,28 @@ def index():
     cur.execute('SELECT * FROM movimientos;')  # las sentencias SQL se acaban en ;
 
     claves = cur.description
-
     filas = cur.fetchall()
 
-    '''
-    l = []  # creamos una lista vacía. Despúes será una lista de diccionarios
+    movimientos = []  # creamos una lista vacía. Despúes será una lista de diccionarios
+    saldo = 0
     for fila in filas:
-        d = {}  # creamos un diccionario vacío
-        for columna in fila:
-            # usaremos enumarate o un índice
-            # lo pasaremos a json la lista de diccionarios
-    '''
-        
+        d ={}  # creamos un diccionario vacío
+        for tuplaClave, valor in zip(claves, fila):
+            d[tuplaClave[0]] = valor
+        if d['esGasto'] == 0:
+            saldo = saldo + d['cantidad']
+        else:
+            saldo = saldo - d['cantidad']
+        d['saldo'] = saldo
+        movimientos.append(d)  
+
     conexion.close()
 
-    return 'Consulta realizada'
+    # return jsonify(movimientos)
+    return render_template('movimientos.html', datos = movimientos)
+
+
+@app.route('/nuevo', methods=['GET', 'POST'])
+def nuevo():
+    return render_template('alta.html')
+

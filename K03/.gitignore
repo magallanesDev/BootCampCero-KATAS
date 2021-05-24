@@ -6,3 +6,6 @@ venv/
 
 # Ignoramos las bases de datos
 *.db
+
+# Ignoramos la carpeta de configuración de Visual Studio Code
+.vscode/
