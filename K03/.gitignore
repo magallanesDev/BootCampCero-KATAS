@@ -9,3 +9,6 @@ venv/
 
 # Ignoramos la carpeta de configuración de Visual Studio Code
 .vscode/
+
+# Ignoramos el archivo de configuración
+config.py
