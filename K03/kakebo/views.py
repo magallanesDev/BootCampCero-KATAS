@@ -1,5 +1,5 @@
 from kakebo import app
-from flask import jsonify, render_template, request
+from flask import jsonify, render_template, request, redirect, url_for
 from kakebo.forms import MovimientosForm
 import sqlite3
 
@@ -38,9 +38,22 @@ def nuevo():
     if request.method == 'GET':
         return render_template('alta.html', form = formulario)
     else:  # será un POST
-        if formulario.validate():
-            pass
-            # insertar el movimiento en la base de datos
-            # redirect a la ruta /
+        if formulario.validate():  # insertar el movimiento en la base de datos
+            conexion = sqlite3.connect('movimientos.db')
+            cur = conexion.cursor()
+
+            query = """ INSERT INTO movimientos (fecha, concepto, categoria, esGasto, cantidad)
+                        VALUES (?, ?, ?, ?, ?) """
+            try:
+                cur.execute(query, [formulario.fecha.data, formulario.concepto.data, formulario.categoria.data,
+                                    formulario.esGasto.data, formulario.cantidad.data])
+            except sqlite3.Error as el_error:
+                print("ERROR EN SQL", el_error)
+                return render_template('alta.html', form = formulario)
+            
+            conexion.commit()  # fijamos el movimiento en la base de datos
+            conexion.close()
+
+            return redirect(url_for('index'))  # redirect a la ruta / a través de la función index
         else:
             return render_template('alta.html', form = formulario)
