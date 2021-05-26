@@ -34,6 +34,13 @@ def index():
 
 @app.route('/nuevo', methods=['GET', 'POST'])
 def nuevo():
-    form = MovimientosForm()
-    return render_template('alta.html', form = form)
-
+    formulario = MovimientosForm()
+    if request.method == 'GET':
+        return render_template('alta.html', form = formulario)
+    else:  # será un POST
+        if formulario.validate():
+            pass
+            # insertar el movimiento en la base de datos
+            # redirect a la ruta /
+        else:
+            return render_template('alta.html', form = formulario)
