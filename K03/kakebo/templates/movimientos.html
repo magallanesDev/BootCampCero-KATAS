@@ -29,7 +29,8 @@
             <td>{{ movimiento.cantidad }}</td>
             <td>{{ movimiento.saldo }}</td>
             <td class='btn'>
-                <a href="/borrar/{{ movimiento.id }}">Borrar</a>
+                <a href="/borrar/{{ movimiento.id }}">Borrar</a> -
+                <a href="/modificar/{{ movimiento.id }}">Modificar</a>
             </td>
         </tr>
         {% endfor %}

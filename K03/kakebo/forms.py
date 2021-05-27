@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DateField, StringField, SelectField, SubmitField, FloatField, BooleanField
+from wtforms import DateField, StringField, SelectField, SubmitField, FloatField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Length, ValidationError
 from datetime import date
 
@@ -10,6 +10,7 @@ def fecha_por_debajo_de_hoy(formulario, campo):
         raise ValidationError('La fecha tiene que ser anterior al día de hoy')
 
 class MovimientosForm(FlaskForm):  # la clase MovimientosForm hereda de FlaskForm
+    id = HiddenField()
     fecha = DateField('Fecha', validators=[DataRequired(message='Debe introducir una fecha válida'), fecha_por_debajo_de_hoy])
     concepto = StringField('Concepto', validators=[DataRequired(), Length(min=10)])
     categoria = SelectField('Categoria', choices=[('00', ''), ('SU', 'Supervivencia'), ('OV', 'Ocio/Vicio'),
