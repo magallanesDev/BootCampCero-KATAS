@@ -12,6 +12,15 @@
     <header class='oscuro' id='cabecera'>
         Kakebo Web - BootCamp Cero VII
     </header>
+    {% with mensajes = get_flashed_messages() %}
+        {% if mensajes %}
+        <div class="popup">
+            {% for mensaje in mensajes %}
+            <p>{{ mensaje }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
     <section class='container'>
         {% block contenido %}{% endblock %}
     </section>
