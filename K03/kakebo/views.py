@@ -86,13 +86,13 @@ def borrar(id):
         filas = consultaSQL("SELECT * FROM movimientos WHERE id=?", [id])
         if len(filas)  == 0:
             flash('El registro no existe')    
-            return render_template('borrar.html', )
+            return render_template('borrar.html')
 
         return render_template('borrar.html', movimiento = filas[0])
     else:
         try:
             modificaTablaSQL("DELETE FROM movimientos WHERE id = ?;", [id])
-        except sqlite3.error as e:
+        except sqlite3.Error as e:
             flash('Se ha producido un error de base de datos, vuelva a intentarlo', 'error')
             return redirect(url_for('index'))
 
@@ -103,13 +103,30 @@ def borrar(id):
 @app.route('/modificar/<int:id>', methods=['GET', 'POST'])
 def modificar(id):
     if request.method =='GET':
-        filas = consultaSQL("SELECT * FROM movimientos WHERE id=?", [id])
+        filas = consultaSQL("SELECT * FROM movimientos WHERE id = ?", [id])
         if len(filas)  == 0:
             flash('El registro no existe', "error")    
-            return render_template('modificar.html', )
+            return render_template('modificar.html')
         registro = filas[0]
-        registro['fecha'] = date.fromisoformat['fecha']
-
-        formulario = MovimientosForm(data=registro)
+        registro['fecha'] = date.fromisoformat(registro['fecha'])
+    
+        formulario = MovimientosForm(data = registro)
 
         return render_template('modificar.html', form = formulario)
+    else:
+        formulario = MovimientosForm()
+        if formulario.validate():
+
+            query = "UPDATE movimientos SET fecha=?, concepto=?, categoria=?, esGasto=?, cantidad=? WHERE id=?;"
+            try:
+                modificaTablaSQL(query, [formulario.fecha.data, formulario.concepto.data, formulario.categoria.data,
+                                    formulario.esGasto.data, formulario.cantidad.data, id])
+        
+            except sqlite3.Error as e:
+                flash('Se ha producido un error de base de datos, vuelva a intentarlo', 'error')
+                return redirect(url_for('index'))
+
+            flash('Modificación realizada con éxito', 'aviso')
+            return redirect(url_for('index')) 
+        else:
+            return render_template('modificar.html', form = formulario)
