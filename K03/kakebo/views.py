@@ -1,8 +1,9 @@
 from kakebo import app
 from flask import jsonify, render_template, request, redirect, url_for, flash
-from kakebo.forms import MovimientosForm
+from kakebo.forms import MovimientosForm, FiltraMovimientosForm
 from datetime import date
 import sqlite3
+
 
 def consultaSQL(query, parametros=[]):
     # Abrimos la conexión
@@ -41,9 +42,27 @@ def modificaTablaSQL(query, parametros=[]):
     
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    movimientos = consultaSQL("SELECT * FROM movimientos order by fecha")
+    filtraForm = FiltraMovimientosForm()  # Instanciamos el formulario
+    query = "SELECT * FROM movimientos WHERE 1=1" # El WHERE 1=1 siempre se cumple, aquí no haría nada,
+                                                      # es una pequeña trampa para añadir otra condición después. 
+    parametros = []
+
+    if request.method == 'POST':
+        if filtraForm.validate():  
+            if filtraForm.fechaDesde.data != None:
+                query += " AND fecha >= ?"
+                parametros.append(filtraForm.fechaDesde.data)
+            if filtraForm.fechaHasta.data != None:
+                query += " AND fecha <= ?"
+                parametros.append(filtraForm.fechaHasta.data)
+            if filtraForm.texto.data != '':
+                query += ' AND concepto LIKE ?'
+                parametros.append("%{}%".format(filtraForm.texto.data))
+
+    query += " ORDER BY fecha"
+    movimientos = consultaSQL(query, parametros)
 
     saldo = 0
     for d in movimientos:
@@ -53,8 +72,8 @@ def index():
             saldo = saldo - d['cantidad']
         d['saldo'] = saldo 
 
-    # return jsonify(movimientos)
-    return render_template('movimientos.html', datos = movimientos)
+    return render_template('movimientos.html', datos = movimientos, formulario = filtraForm)
+
 
 
 @app.route('/nuevo', methods=['GET', 'POST'])
@@ -80,6 +99,7 @@ def nuevo():
             return render_template('alta.html', form = formulario)
 
 
+
 @app.route('/borrar/<int:id>', methods=['GET', 'POST'])
 def borrar(id):
     if request.method =='GET':
@@ -100,6 +120,7 @@ def borrar(id):
         return redirect(url_for('index')) 
 
 
+
 @app.route('/modificar/<int:id>', methods=['GET', 'POST'])
 def modificar(id):
     if request.method =='GET':
@@ -115,7 +136,7 @@ def modificar(id):
         return render_template('modificar.html', form = formulario)
     else:
         formulario = MovimientosForm()
-        if formulario.validate():
+        if formulario.validate():  # validamos el formulario
 
             query = "UPDATE movimientos SET fecha=?, concepto=?, categoria=?, esGasto=?, cantidad=? WHERE id=?;"
             try:
