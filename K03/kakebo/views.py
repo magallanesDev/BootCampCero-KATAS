@@ -123,10 +123,12 @@ def modificar(id):
                                     formulario.esGasto.data, formulario.cantidad.data, id])
         
             except sqlite3.Error as e:
-                flash('Se ha producido un error de base de datos, vuelva a intentarlo', 'error')
-                return redirect(url_for('index'))
+                print("Error en update:", e)
+                flash('Se ha producido un error de base de datos. Contacte con administrador', 'error')
+                return render_template('modificar.html', form = formulario)
 
             flash('Modificación realizada con éxito', 'aviso')
-            return redirect(url_for('index')) 
+            return redirect(url_for('index'))
+            
         else:
             return render_template('modificar.html', form = formulario)
