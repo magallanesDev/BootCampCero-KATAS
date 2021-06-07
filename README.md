@@ -4,7 +4,7 @@
 ## K02 - PYGAME, juego ARKANOID
 ## K03 - FLASK, aplicación web KAKEBO
 ## K04 - JavaScript
-## k05 - FLASK, aplicación web SILABEADOR
+## K05 - FLASK, aplicación web SILABEADOR
 
 
 ### Kick Off:         viernes 23 abril 2021

@@ -4,5 +4,4 @@ document.querySelector("#btn-aceptar").addEventListener("click", () => {
     elfolio = document.querySelector("#folio")
     elfolio.appendChild(parrafo)
     parrafo.innerHTML = laEntrada.value
-
 })

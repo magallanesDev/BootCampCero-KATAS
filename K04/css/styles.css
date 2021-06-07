@@ -1,0 +1,17 @@
+#folio {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.pelicula {
+    border: 1px solid #606c76;
+    width: calc(33% - 16px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pelicula img {
+    width: 150px;
+}
