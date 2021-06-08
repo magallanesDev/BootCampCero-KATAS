@@ -6,8 +6,11 @@ import requests
 @app.route("/pilengua/<frase>")
 def enlenguapi(frase):
     respuesta = pilengua(frase)
-    d = { 'original' : frase,
-        'pilengua' : respuesta }
+    d = { 
+        'status': 'success',
+        'original' : frase,
+        'pilengua' : respuesta 
+    }
     return jsonify(d)
 
 

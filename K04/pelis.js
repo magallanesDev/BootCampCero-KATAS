@@ -2,7 +2,7 @@ var folio = document.querySelector("#folio")
 
 
 function gestionaRespuestaAsincrona() {
-    if (this.readyState === 4 && this.status === 200) {
+    if (this.readyState === 4 && this.status === 200) {   // ha ido todo bien
         console.log(this.responseText)
         const respuesta = JSON.parse(this.responseText)
 
@@ -43,7 +43,7 @@ function gestionaRespuestaAsincrona() {
     }
 }
 
-const xhr = new XMLHttpRequest()
+const xhr = new XMLHttpRequest()  // creamos una instancia de este objeto (gestor de peticiones asíncronas)
 xhr.onload = gestionaRespuestaAsincrona
 
 
