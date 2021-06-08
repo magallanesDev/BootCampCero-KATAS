@@ -5,7 +5,7 @@
 ## K03 - FLASK, aplicación web KAKEBO
 ## K04 - JavaScript
 ## K05 - FLASK, aplicación web SILABEADOR
-
+## K06 - FLASK, aplicación web KAKEBO-2 con JavaScript
 
 ### Kick Off:         viernes 23 abril 2021
 ### Primera kata:     lunes 26 abril 2021
