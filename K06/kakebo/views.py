@@ -2,14 +2,18 @@ import sqlite3
 from flask.json import jsonify
 from kakebo import app
 from kakebo.dataaccess import DBmanager
-from flask import jsonify
+from flask import jsonify, render_template
 import sqlite3
 
 
 dbManager = DBmanager(app.config.get('DATABASE'))
 
+@app.route('/')
+def listaMovimientos():
+    return render_template('spa.html')
+
 @app.route('/api/v1/movimientos')
-def movimientos():
+def movimientosAPI():
     query = "SELECT * FROM movimientos ORDER BY fecha;"
     
     try:
