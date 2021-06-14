@@ -7,6 +7,7 @@ const categorias = {
 
 
 let losMovimientos
+xhr = new XMLHttpRequest()
 
 function recibeRespuesta() {
     if (this.readyState === 4 && (this.status === 200 || this.status === 201)) {
@@ -57,7 +58,6 @@ function muestraMovimientos() {
             return
         }
 
-
         losMovimientos = respuesta.movimientos
         const tbody = document.querySelector(".tabla-movimientos tbody")  // lo insertamos dentro de tbody (mirar spa.html)
         tbody.innerHTML = ""
@@ -84,8 +84,6 @@ function muestraMovimientos() {
 }
 
 
-xhr = new XMLHttpRequest()
-
 
 function llamaApiMovimientos() {
     xhr.open('GET', `http://localhost:5000/api/v1/movimientos`, true)
@@ -109,10 +107,45 @@ function capturaFormMovimiento() {
 }
 
 
+function validar(movimiento) {
+    if (!movimiento.fecha)  {
+        alert("Fecha obligatoria")
+        return false
+    }
+
+    if (movimiento.concepto === "") {
+        alert("Concepto obligatorio")
+        return false
+    }
+
+    if (!document.querySelector("#gasto").checked && !document.querySelector("#ingreso").checked) {
+        alert("Elija tipo de movimiento")
+        return false
+    }
+
+    if (movimiento.esGasto && !movimiento.categoria) {
+        alert("Debe seleccionar categoría del gasto")
+        return false
+    }
+
+    if (!movimiento.esGasto && movimiento.categoria) {
+        alert("Un ingreso no puede tener categoría")
+        return false
+    }
+    
+    if (movimiento.cantidad <= 0) {
+        alert("La cantidad debe ser positiva")
+    }
+    
+    return true
+}
+
+
 function llamaApiModificaMovimiento(ev) {
     ev.preventDefault() // para que no recargue la página (comportamiento por defecto)
+    id = document.querySelector("#idMovimiento").value
     
-    movimiento.fecha = document.querySelector("#fecha").value
+
     if (!id) {
         alert("Selecciona un movimiento antes")
         return
@@ -120,7 +153,10 @@ function llamaApiModificaMovimiento(ev) {
 
     const movimiento = capturaFormMovimiento()
 
-    id = document.querySelector("#idMovimiento").value
+    if (!validar(movimiento)) {
+        return
+    }
+    
 
     xhr.open("PUT", `http://localhost:5000/api/v1/movimiento/${id}`, true)
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
@@ -147,6 +183,10 @@ function llamaApiCreaMovimiento(ev) {
     ev.preventDefault()
 
     const movimiento = capturaFormMovimiento()
+
+    if (!validar(movimiento)) {
+        return
+    }
 
     xhr.open("POST", `http://localhost:5000/api/v1/movimiento`, true)
     xhr.onload = recibeRespuesta
