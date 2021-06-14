@@ -46,6 +46,25 @@ def detalleMovimiento(id=None):
                 WHERE id ={}""".format(id), request.json)
             return jsonify({"status": "success", "mensaje": "registro modificado"})
 
+   
+        if request.method == 'DELETE':
+            dbManager.modificaTablaSQL("""
+                DELETE FROM movimientos
+                WHERE id = ?""", [id])
+
+            return jsonify({"status": "success", "mensaje": "registro borrado"})
+
+
+        if request.method == 'POST':
+            dbManager.modificaTablaSQL("""
+                INSERT INTO movimientos (fecha, concepto, esGasto, categoria, cantidad)
+                VALUES (:fecha, :concepto, :esGasto, :categoria, :cantidad)""", request.json)
+
+            return jsonify({"status": "success", "mensaje": "registro creado"}), HTTPStatus.CREATED
+
+
+   
     except sqlite3.Error as e:
+        print("error", e)
         return jsonify({"status": "fail", "mensaje": "Error en base de datos: {}".format(e)}), HTTPStatus.BAD_REQUEST
         

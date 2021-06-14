@@ -9,17 +9,18 @@ const categorias = {
 let losMovimientos
 
 function recibeRespuesta() {
-    if (this.readyState === 4 && this.status === 200) {
+    if (this.readyState === 4 && (this.status === 200 || this.status === 201)) {
         const respuesta = JSON.parse(this.responseText)
 
         if (respuesta.status !== 'success') {
             alert("Se ha producido un error  en acceso a servidor" + respuesta.mensaje)
             return
         }
+        
+        alert(respuesta.mensaje)
 
         llamaApiMovimientos()
-    }
-    
+    }    
 }
 
 function detallaMovimiento(id) {
@@ -56,6 +57,7 @@ function muestraMovimientos() {
             return
         }
 
+
         losMovimientos = respuesta.movimientos
         const tbody = document.querySelector(".tabla-movimientos tbody")  // lo insertamos dentro de tbody (mirar spa.html)
         tbody.innerHTML = ""
@@ -91,28 +93,81 @@ function llamaApiMovimientos() {
     xhr.send()
 }
 
+
+function capturaFormMovimiento() {
+    const movimiento = {}
+    movimiento.fecha = document.querySelector("#fecha").value
+    movimiento.concepto = document.querySelector("#concepto").value
+    movimiento.categoria = document.querySelector("#categoria").value
+    movimiento.cantidad = document.querySelector("#cantidad").value
+    if (document.querySelector("#gasto").checked) {
+        movimiento.esGasto = 1
+    } else {
+        movimiento.esGasto = 0
+    }
+    return movimiento 
+}
+
+
+function llamaApiModificaMovimiento(ev) {
+    ev.preventDefault() // para que no recargue la página (comportamiento por defecto)
+    
+    movimiento.fecha = document.querySelector("#fecha").value
+    if (!id) {
+        alert("Selecciona un movimiento antes")
+        return
+    }
+
+    const movimiento = capturaFormMovimiento()
+
+    id = document.querySelector("#idMovimiento").value
+
+    xhr.open("PUT", `http://localhost:5000/api/v1/movimiento/${id}`, true)
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    xhr.onload = recibeRespuesta
+
+    xhr.send(JSON.stringify(movimiento))
+}
+
+
+function llamaApiBorraMovimiento(ev) {
+    ev.preventDefault()
+    id = document.querySelector("#idMovimiento").value
+    if (!id) {
+        alert("Selecciona un movimiento antes")
+        return
+    }
+    xhr.open("DELETE", `http://localhost:5000/api/v1/movimiento/${id}`, true)
+    xhr.onload = recibeRespuesta
+    xhr.send()
+}
+
+
+function llamaApiCreaMovimiento(ev) {
+    ev.preventDefault()
+
+    const movimiento = capturaFormMovimiento()
+
+    xhr.open("POST", `http://localhost:5000/api/v1/movimiento`, true)
+    xhr.onload = recibeRespuesta
+
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+
+    xhr.send(JSON.stringify(movimiento))
+    
+}
+
+
+
 window.onload = function() {
     llamaApiMovimientos()
     document.querySelector("#modificar")
-        .addEventListener("click", (ev) => {
-            ev.preventDefault()
-            const movimiento = {}
-            movimiento.fecha = document.querySelector("#fecha").value
-            movimiento.concepto = document.querySelector("#concepto").value
-            movimiento.categoria = document.querySelector("#categoria").value
-            movimiento.cantidad = document.querySelector("#cantidad").value
-            if (document.querySelector("#gasto").checked) {
-                movimiento.esGasto = 1
-            } else {
-                movimiento.esGasto = 0
-            }
-            id = document.querySelector("#idMovimiento").value
+        .addEventListener("click", llamaApiModificaMovimiento)
 
-            xhr.open("PUT", `http://localhost:5000/api/v1/movimiento/${id}`, true)
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-            xhr.onload = recibeRespuesta
+    document.querySelector("#borrar")
+        .addEventListener("click", llamaApiBorraMovimiento)
 
-            xhr.send(JSON.stringify(movimiento))
-
-        })   
+        document.querySelector("#crear")
+        .addEventListener("click", llamaApiCreaMovimiento)    
+    
 }
